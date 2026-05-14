@@ -171,7 +171,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 </style>
 </head>
 <body>
-
+ 
 <!-- LOGIN -->
 <div class="screen active" id="screen-login">
   <div class="login-box">
@@ -206,7 +206,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     </div>
   </div>
 </div>
-
+ 
 <!-- ADMIN -->
 <div class="screen" id="screen-admin" style="flex-direction:column">
   <div class="topbar">
@@ -294,7 +294,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     </div>
   </div>
 </div>
-
+ 
 <!-- EMPLOYEE -->
 <div class="screen" id="screen-employee" style="flex-direction:column">
   <div class="topbar">
@@ -325,7 +325,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     </div>
   </div>
 </div>
-
+ 
 <!-- CLIENT FLOW -->
 <div class="screen" id="screen-client" style="flex-direction:column">
   <div class="client-header">
@@ -372,7 +372,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   </div>
   <div class="bottom-cta"><button class="btn-primary" id="client-next-btn" onclick="clientNext()">CONTINUAR →</button></div>
 </div>
-
+ 
 <!-- MODALS -->
 <div class="modal-overlay" id="modal-service" onclick="closeModal('modal-service')">
   <div class="modal" onclick="event.stopPropagation()">
@@ -385,7 +385,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <button class="btn-primary" onclick="saveService()">SALVAR SERVIÇO</button>
   </div>
 </div>
-
+ 
 <div class="modal-overlay" id="modal-client" onclick="closeModal('modal-client')">
   <div class="modal" onclick="event.stopPropagation()">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px"><div class="modal-title" id="modal-client-title">Cadastrar Cliente</div><button class="modal-close" onclick="closeModal('modal-client')">×</button></div>
@@ -398,7 +398,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <button class="btn-primary" onclick="saveClient()">SALVAR CLIENTE</button>
   </div>
 </div>
-
+ 
 <div class="modal-overlay" id="modal-user" onclick="closeModal('modal-user')">
   <div class="modal" onclick="event.stopPropagation()">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px"><div class="modal-title" id="modal-user-title">Novo Usuário</div><button class="modal-close" onclick="closeModal('modal-user')">×</button></div>
@@ -412,7 +412,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <button class="btn-primary" onclick="saveUser()">SALVAR USUÁRIO</button>
   </div>
 </div>
-
+ 
 <div class="modal-overlay" id="modal-lock" onclick="closeModal('modal-lock')">
   <div class="modal" onclick="event.stopPropagation()">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px"><div class="modal-title">🔒 Travar Horários</div><button class="modal-close" onclick="closeModal('modal-lock')">×</button></div>
@@ -423,7 +423,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <button class="btn-primary" style="margin-top:16px" onclick="saveLocks()">SALVAR TRAVAS</button>
   </div>
 </div>
-
+ 
 <div class="modal-overlay" id="modal-wa" onclick="return false">
   <div class="modal" onclick="event.stopPropagation()">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px"><div class="modal-title">🎉 Agendamento Confirmado!</div></div>
@@ -436,16 +436,16 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <button class="btn-ghost" onclick="closeModal('modal-wa');showScreen('login')" style="margin-top:8px">Fechar e Voltar</button>
   </div>
 </div>
-
+ 
 <div class="toast" id="toast"></div>
-
+ 
 <script>
 // ═══════════ STORAGE ═══════════
 const LS={
   get:(k,fb)=>{try{const d=localStorage.getItem('bos_'+k);return d?JSON.parse(d):fb}catch{return fb}},
   set:(k,v)=>{try{localStorage.setItem('bos_'+k,JSON.stringify(v))}catch{}}
 };
-
+ 
 let SERVICES=LS.get('services',[
   {id:1,name:'Corte Simples',cat:'popular',price:35,duration:20,icon:'✂️'},
   {id:2,name:'Corte + Barba',cat:'popular',price:55,duration:40,icon:'✂️'},
@@ -456,14 +456,14 @@ let SERVICES=LS.get('services',[
   {id:7,name:'Progressiva',cat:'outros',price:70,duration:60,icon:'🌟'},
   {id:8,name:'Coloração',cat:'outros',price:80,duration:40,icon:'🎨'},
 ]);
-
+ 
 let USERS=LS.get('users',[
   {id:1,name:'Admin BarberOS',email:'admin@barberos.com',pass:'123456',role:'admin',phone:'5521990000000',emp:'admin'},
   {id:2,name:'Marcos Silva',email:'marcos@barberos.com',pass:'123456',role:'employee',phone:'5521991111111',emp:'marcos'},
   {id:3,name:'Rafael Costa',email:'rafael@barberos.com',pass:'123456',role:'employee',phone:'5521992222222',emp:'rafael'},
   {id:4,name:'Lucas Mendes',email:'lucas@barberos.com',pass:'123456',role:'employee',phone:'5521993333333',emp:'lucas'},
 ]);
-
+ 
 let CLIENTS=LS.get('clients',[
   {id:1,name:'João Pedro',phone:'(21) 99900-0001',dob:'1990-05-13',visits:12,obs:''},
   {id:2,name:'Carlos Eduardo',phone:'(21) 99900-0002',dob:'1985-03-22',visits:8,obs:'Prefere tesoura'},
@@ -472,7 +472,7 @@ let CLIENTS=LS.get('clients',[
   {id:5,name:'Felipe Souza',phone:'(21) 99900-0005',dob:'2000-11-30',visits:3,obs:''},
   {id:6,name:'Diego Rocha',phone:'(21) 99900-0006',dob:'1993-08-17',visits:9,obs:''},
 ]);
-
+ 
 let APPTS=LS.get('appts',[
   {id:1,time:'09:00',date:'today',client:'João Pedro',clientPhone:'(21) 99900-0001',service:'Corte + Barba',emp:'marcos',status:'done',price:55},
   {id:2,time:'09:40',date:'today',client:'Carlos Eduardo',clientPhone:'(21) 99900-0002',service:'Degradê',emp:'rafael',status:'done',price:45},
@@ -481,30 +481,30 @@ let APPTS=LS.get('appts',[
   {id:5,time:'14:00',date:'today',client:'Felipe Souza',clientPhone:'(21) 99900-0005',service:'Corte + Barba',emp:'marcos',status:'upcoming',price:55},
   {id:6,time:'15:20',date:'today',client:'Diego Rocha',clientPhone:'(21) 99900-0006',service:'Degradê',emp:'rafael',status:'upcoming',price:45},
 ]);
-
+ 
 let LOCKED=LS.get('locked',{});
 let nextId=LS.get('nextId',200);
 function nid(){nextId++;LS.set('nextId',nextId);return nextId;}
-
+ 
 const PROFESSIONALS=[
   {id:1,name:'Marcos Silva',role:'Barbeiro Sênior',emoji:'👨‍🦱',rating:'★★★★★',emp:'marcos',phone:'5521991111111'},
   {id:2,name:'Rafael Costa',role:'Barbeiro Especialista',emoji:'👨‍🦰',rating:'★★★★☆',emp:'rafael',phone:'5521992222222'},
   {id:3,name:'Lucas Mendes',role:'Barbeiro',emoji:'👨',rating:'★★★★☆',emp:'lucas',phone:'5521993333333'},
 ];
-
+ 
 const FIN={
   hoje:{revenue:420,appts:9,emp:{marcos:180,rafael:140,lucas:100},services:{'Corte + Barba':4,'Degradê':3,'Barba Completa':2},chart:{labels:['09h','10h','11h','12h','13h','14h','15h','16h'],data:[60,80,55,0,90,70,65,0]}},
   semana:{revenue:2840,appts:61,emp:{marcos:1100,rafael:980,lucas:760},services:{'Corte + Barba':22,'Degradê':18,'Corte Simples':12},chart:{labels:['Seg','Ter','Qua','Qui','Sex','Sáb'],data:[380,450,510,390,620,490]}},
   'semana-ant':{revenue:2610,appts:54,emp:{marcos:1010,rafael:890,lucas:710},services:{'Corte + Barba':20,'Degradê':15,'Barba Completa':10},chart:{labels:['Seg','Ter','Qua','Qui','Sex','Sáb'],data:[420,330,510,290,570,490]}},
   mes:{revenue:11200,appts:240,emp:{marcos:4500,rafael:3800,lucas:2900},services:{'Corte + Barba':88,'Degradê':72,'Corte Simples':45},chart:{labels:['S1','S2','S3','S4'],data:[2600,2900,3100,2600]}},
 };
-
+ 
 // ═══════════ STATE ═══════════
 let curFilter='hoje',curEmp='all',chartType='bar',rchart=null;
 let cStep=0,selSvc=null,selPro=null,selDate=null,selSlot=null,curCat='all';
 let calY=2026,calM=4;
 let curUser=null,curClientUser=null,lockCtx='admin';
-
+ 
 // ═══════════ UTILS ═══════════
 const fmtDate=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 const TODAY=fmtDate(new Date());
@@ -512,7 +512,7 @@ function showScreen(n){document.querySelectorAll('.screen').forEach(s=>s.classLi
 function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 function showToast(msg,dur=2800){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur);}
-
+ 
 // ═══════════ BIRTHDAY ═══════════
 function getBdays(){
   const now=new Date();
@@ -527,7 +527,7 @@ function renderBdayAlerts(cid){
     el.innerHTML+=`<div class="bday-banner"><div class="bday-icon">🎂</div><div style="flex:1"><div class="bday-title">Aniversário Hoje!</div><div class="bday-sub">${b.name} faz aniversário hoje &nbsp;·&nbsp; <span style="color:var(--gold)">${b.phone}</span></div></div><button class="bday-close" onclick="this.closest('.bday-banner').remove()">×</button></div>`;
   });
 }
-
+ 
 // ═══════════ AUTH ═══════════
 function switchLoginTab(tab){
   document.querySelectorAll('.login-tab').forEach((b,i)=>b.classList.toggle('active',tab==='staff'?i===0:i===1));
@@ -566,7 +566,7 @@ function doLogin(){
   }
 }
 function logout(){curUser=null;curClientUser=null;showScreen('login');}
-
+ 
 // ═══════════ ADMIN ═══════════
 function adminTab(btn,panel){
   document.querySelectorAll('#screen-admin .nav-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
@@ -579,7 +579,7 @@ function adminTab(btn,panel){
   if(panel==='usuarios'){renderUsers();}
 }
 function initAdminScreen(){renderDashboard();renderBdayAlerts('bday-alerts-dash');renderAdminAgenda();renderClients();renderServicesMgmt();renderUsers();}
-
+ 
 // DASHBOARD
 function setFilter(btn,f){document.querySelectorAll('#panel-dashboard .filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');curFilter=f;renderDashboard();}
 function setFilterEmployee(v){curEmp=v;renderDashboard();}
@@ -611,7 +611,7 @@ function renderChart(){
   const ctx=document.getElementById('revenueChart').getContext('2d');
   rchart=new Chart(ctx,{type:chartType,data:{labels:raw.chart.labels,datasets:[{label:'Faturamento (R$)',data,backgroundColor:'rgba(201,168,76,0.15)',borderColor:'#c9a84c',borderWidth:2,borderRadius:chartType==='bar'?8:0,fill:chartType==='line',tension:.4,pointBackgroundColor:'#c9a84c',pointRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#18181d',borderColor:'rgba(255,255,255,0.08)',borderWidth:1,titleColor:'#a09a8e',bodyColor:'#f0ece4',callbacks:{label:c=>'R$ '+c.parsed.y}}},scales:{x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#5a5650',font:{family:'DM Mono',size:11}}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#5a5650',font:{family:'DM Mono',size:11},callback:v=>'R$ '+v}}}}});
 }
-
+ 
 // AGENDA
 function renderDateStrip(cid,emp){
   const c=document.getElementById(cid);c.innerHTML='';
@@ -650,7 +650,7 @@ function renderApptList(cid,emp,ds){
   });
 }
 function cancelAppt(id){APPTS=APPTS.filter(a=>a.id!==id);LS.set('appts',APPTS);renderAdminAgenda();showToast('🗑️ Cancelado');}
-
+ 
 // EMP CLIENTS
 function empTab(btn,pid){
   document.querySelectorAll('#screen-employee .nav-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
@@ -668,7 +668,7 @@ function renderEmpClients(emp){
     g.innerHTML+=`<div class="client-card"><div class="client-ini">${ini}</div><div class="client-name">${name}</div><div class="client-meta">${cl?.phone||'—'}</div><div class="client-meta" style="margin-top:6px"><span class="chip chip-gold">${ap?.time||'—'} · ${ap?.service||'—'}</span></div></div>`;
   });
 }
-
+ 
 // CLIENTS
 function renderClients(q=''){
   const g=document.getElementById('clients-grid');g.innerHTML='';
@@ -716,7 +716,7 @@ function saveClient(){
   else CLIENTS.push({id:nid(),name,phone,dob,obs,visits:0});
   LS.set('clients',CLIENTS);closeModal('modal-client');renderClients();renderBdayAlerts('bday-alerts-clients');showToast('✅ Cliente salvo!');
 }
-
+ 
 // SERVICES
 function renderServicesMgmt(){
   const c=document.getElementById('services-mgmt-list');c.innerHTML='';
@@ -753,7 +753,7 @@ function saveService(){
   else{const icons={popular:'✂️',barba:'🧔',outros:'💫'};SERVICES.push({id:nid(),name,cat,price,duration:dur,icon:icons[cat]||'✂️'});}
   LS.set('services',SERVICES);closeModal('modal-service');renderServicesMgmt();showToast('✅ Serviço salvo!');
 }
-
+ 
 // USERS
 function renderUsers(){
   const c=document.getElementById('users-list');c.innerHTML='';
@@ -794,7 +794,7 @@ function saveUser(){
   else{if(USERS.find(u=>u.email===email)){showToast('⚠️ E-mail já cadastrado');return;}USERS.push({id:nid(),name,email,phone,pass:pass||'123456',role,emp});}
   LS.set('users',USERS);closeModal('modal-user');renderUsers();showToast('✅ Usuário salvo!');
 }
-
+ 
 // LOCK
 function openLockModal(ctx){
   lockCtx=ctx;
@@ -816,7 +816,7 @@ function renderLockSlots(){
 function toggleLock(slot){const key=getLockKey();if(!LOCKED[key])LOCKED[key]=[];const i=LOCKED[key].indexOf(slot);if(i>-1)LOCKED[key].splice(i,1);else LOCKED[key].push(slot);renderLockSlots();}
 function saveLocks(){LS.set('locked',LOCKED);closeModal('modal-lock');showToast('🔒 Horários travados!');}
 function isLocked(emp,ds,slot){return(LOCKED[emp+'_'+ds]||[]).includes(slot);}
-
+ 
 // ═══════════ CLIENT FLOW ═══════════
 const STEPS=[
   {title:'Escolha um Serviço',sub:'Selecione o que deseja fazer'},
@@ -842,7 +842,7 @@ function clientNext(){
   cStep++;renderStep();
 }
 function clientBack(){if(cStep===0){showScreen('login');return;}cStep--;renderStep();}
-
+ 
 function renderServices(){
   const g=document.getElementById('services-grid');g.innerHTML='';
   const list=curCat==='all'?SERVICES:SERVICES.filter(s=>s.cat===curCat);
@@ -850,13 +850,13 @@ function renderServices(){
 }
 function selService(id){selSvc=SERVICES.find(s=>s.id===id);renderServices();}
 function setCat(btn,cat){document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');curCat=cat;renderServices();}
-
+ 
 function renderPros(){
   const g=document.getElementById('pros-grid');g.innerHTML='';
   PROFESSIONALS.forEach(p=>{g.innerHTML+=`<div class="pro-card ${selPro?.id===p.id?'selected':''}" onclick="selProfessional(${p.id})"><div class="pro-avatar">${p.emoji}</div><div class="pro-name">${p.name}</div><div class="pro-role">${p.role}</div><div class="pro-stars">${p.rating}</div></div>`;});
 }
 function selProfessional(id){selPro=PROFESSIONALS.find(p=>p.id===id);renderPros();}
-
+ 
 function renderCalendar(){
   const months=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
   document.getElementById('cal-month-label').textContent=`${months[calM]} ${calY}`;
@@ -878,7 +878,7 @@ function renderCalendar(){
 }
 function calNav(dir){calM+=dir;if(calM>11){calM=0;calY++;}if(calM<0){calM=11;calY--;}renderCalendar();}
 function calSel(y,m,d){selDate=new Date(y,m,d);selSlot=null;renderCalendar();}
-
+ 
 function renderSlots(){
   const g=document.getElementById('slots-grid');const title=document.getElementById('slots-title');
   if(!selDate){g.innerHTML='';title.textContent='Selecione uma data primeiro';return;}
@@ -897,7 +897,7 @@ function renderSlots(){
   }
 }
 function selSlotFn(s){selSlot=s;renderSlots();}
-
+ 
 function renderConfirm(){
   const months=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
   document.getElementById('conf-service').textContent=selSvc?.name||'—';
@@ -905,7 +905,7 @@ function renderConfirm(){
   document.getElementById('conf-datetime').textContent=selDate?`${selDate.getDate()} ${months[selDate.getMonth()]} ${selDate.getFullYear()} às ${selSlot}`:'—';
   document.getElementById('conf-price').textContent=selSvc?`R$ ${selSvc.price}`:'—';
 }
-
+ 
 function bookConfirm(){
   const ds=fmtDate(selDate);const isToday=ds===TODAY;
   const cName=curClientUser?.name||'Cliente';const cPhone=curClientUser?.phone||'';
@@ -923,7 +923,7 @@ function bookConfirm(){
   selSvc=null;selPro=null;selDate=null;selSlot=null;
   openModal('modal-wa');
 }
-
+ 
 // ═══════════ INIT ═══════════
 document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('lock-date').value=TODAY;
