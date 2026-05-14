@@ -1,327 +1,1412 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>El Pedro Barbearia | Links Oficiais</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EL PEDRO — Barber Shop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0a0a0b;
+    --bg2: #111114;
+    --bg3: #18181d;
+    --glass: rgba(255,255,255,0.04);
+    --glass-border: rgba(255,255,255,0.08);
+    --glass-hover: rgba(255,255,255,0.07);
+    --gold: #c9a84c;
+    --gold2: #e8c96a;
+    --gold-dim: rgba(201,168,76,0.15);
+    --red: #e05252;
+    --green: #4caf82;
+    --blue: #5286e0;
+    --text: #f0ece4;
+    --text2: #a09a8e;
+    --text3: #5a5650;
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
 
-    <style>
-        :root {
-            --gold: #D4AF37;
-            --gold-light: #f0d060;
-            --silver: #C0C0C0;
-            --text-white: #ffffff;
-            --btn-bg: rgba(0, 0, 0, 0.55);
-            --btn-hover: rgba(212, 175, 55, 0.25);
-        }
+  /* ── SCREENS ── */
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: flex; }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9999; opacity: .4;
+  }
 
-        body {
-            font-family: 'Montserrat', sans-serif;
-            color: var(--text-white);
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            padding: 40px 20px 60px;
-            position: relative;
-            overflow-x: hidden;
-        }
+  /* ══════════════════════════════════
+     LOGIN SCREEN
+  ══════════════════════════════════ */
+  #screen-login {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,168,76,0.12) 0%, transparent 70%);
+  }
+  .login-box {
+    width: 100%; max-width: 400px;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 40px 32px;
+    backdrop-filter: blur(20px);
+    animation: fadeUp .5s ease;
+  }
+  .brand {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .brand-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    letter-spacing: 4px;
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    line-height: 1;
+  }
+  .brand-sub {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--text3);
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+  .login-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--bg2);
+    border-radius: var(--radius-sm);
+    padding: 4px;
+    margin-bottom: 24px;
+  }
+  .login-tab {
+    flex: 1;
+    padding: 8px;
+    text-align: center;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--text2);
+    transition: all .2s;
+    border: none; background: none;
+  }
+  .login-tab.active { background: var(--glass-border); color: var(--text); }
+  .field { margin-bottom: 16px; }
+  .field label { font-size: 12px; color: var(--text2); letter-spacing: .5px; display: block; margin-bottom: 6px; }
+  .field input, .field select {
+    width: 100%; padding: 12px 16px;
+    background: var(--bg2);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .field input:focus, .field select:focus { border-color: var(--gold); }
+  .field select option { background: var(--bg2); }
+  .btn-primary {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    border: none;
+    border-radius: var(--radius-sm);
+    color: #0a0a0b;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity .2s, transform .1s;
+    margin-top: 4px;
+  }
+  .btn-primary:hover { opacity: .9; }
+  .btn-primary:active { transform: scale(.98); }
+  .btn-ghost {
+    width: 100%;
+    padding: 12px;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: background .2s;
+    margin-top: 10px;
+  }
+  .btn-ghost:hover { background: var(--glass-hover); }
+  .divider { text-align: center; color: var(--text3); font-size: 12px; margin: 16px 0; position: relative; }
+  .divider::before, .divider::after {
+    content: ''; position: absolute; top: 50%;
+    width: 40%; height: 1px; background: var(--glass-border);
+  }
+  .divider::before { left: 0; }
+  .divider::after { right: 0; }
+  .client-register { display: none; }
 
-        /* ── Fundo com imagem de barbearia ── */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image: url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=1200&q=80');
-            background-size: cover;
-            background-position: center top;
-            filter: brightness(0.28) saturate(0.6);
-            z-index: -2;
-        }
+  /* ══════════════════════════════════
+     MAIN LAYOUT (ADMIN / EMPLOYEE)
+  ══════════════════════════════════ */
+  #screen-admin, #screen-employee {
+    flex-direction: column;
+  }
+  .topbar {
+    height: 60px;
+    background: rgba(10,10,11,0.8);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--glass-border);
+    display: flex; align-items: center;
+    padding: 0 20px;
+    gap: 12px;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .topbar-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 3px;
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .topbar-nav {
+    display: flex; gap: 4px; flex: 1; overflow-x: auto;
+  }
+  .nav-btn {
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--text2);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all .2s;
+  }
+  .nav-btn.active { background: var(--gold-dim); color: var(--gold); }
+  .nav-btn:hover:not(.active) { background: var(--glass); color: var(--text); }
+  .topbar-user {
+    display: flex; align-items: center; gap: 8px;
+    margin-left: auto;
+  }
+  .avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: #0a0a0b;
+  }
+  .topbar-name { font-size: 13px; color: var(--text2); display: none; }
+  @media(min-width:480px) { .topbar-name { display: block; } }
+  .btn-logout {
+    padding: 6px 12px; border-radius: 8px;
+    background: var(--glass); border: 1px solid var(--glass-border);
+    color: var(--text2); font-size: 12px; cursor: pointer;
+    transition: all .2s;
+  }
+  .btn-logout:hover { border-color: var(--red); color: var(--red); }
 
-        /* Overlay com gradiente dourado sutil */
-        body::after {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background: linear-gradient(
-                180deg,
-                rgba(0,0,0,0.45) 0%,
-                rgba(10,8,2,0.65) 50%,
-                rgba(0,0,0,0.80) 100%
-            );
-            z-index: -1;
-        }
+  .main-content { flex: 1; padding: 20px; overflow-y: auto; }
 
-        .wrapper {
-            width: 100%;
-            max-width: 460px;
-            text-align: center;
-            position: relative;
-        }
+  /* ── TABS (inner panels) ── */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; animation: fadeIn .3s ease; }
 
-        /* ── Perfil / Logo ── */
-        .profile-container {
-            margin-bottom: 32px;
-            animation: fadeDown 0.8s ease both;
-        }
+  /* ══════════════════════════════════
+     BENTO GRID — DASHBOARD
+  ══════════════════════════════════ */
+  .section-title {
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--text3); margin-bottom: 16px;
+  }
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  @media(min-width:768px) {
+    .bento { grid-template-columns: repeat(4, 1fr); }
+  }
+  .card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    padding: 20px;
+    transition: border-color .2s;
+    position: relative; overflow: hidden;
+  }
+  .card:hover { border-color: rgba(255,255,255,0.12); }
+  .card::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.02), transparent);
+    pointer-events: none;
+  }
+  .card-span2 { grid-column: span 2; }
+  .card-span4 { grid-column: 1 / -1; }
+  .metric-label { font-size: 11px; letter-spacing: 1px; color: var(--text3); text-transform: uppercase; margin-bottom: 8px; }
+  .metric-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px; letter-spacing: 1px;
+    background: linear-gradient(135deg, var(--text), var(--text2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    line-height: 1;
+  }
+  .metric-value.gold {
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .metric-value.green {
+    background: linear-gradient(135deg, var(--green), #6de0a8);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .metric-sub { font-size: 12px; color: var(--text3); margin-top: 4px; }
+  .metric-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 8px; border-radius: 20px;
+    font-size: 11px; font-weight: 500; margin-top: 8px;
+  }
+  .badge-up { background: rgba(76,175,130,0.15); color: var(--green); }
+  .badge-down { background: rgba(224,82,82,0.15); color: var(--red); }
 
-        .logo-ring {
-            display: inline-block;
-            padding: 5px;
-            border-radius: 50%;
-            background: linear-gradient(145deg, var(--gold), #7a5f10, var(--gold-light));
-            box-shadow: 0 0 28px rgba(212, 175, 55, 0.45);
-            margin-bottom: 18px;
-        }
+  /* FILTERS */
+  .filter-row {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-bottom: 16px;
+  }
+  .filter-btn {
+    padding: 7px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    background: var(--glass);
+    color: var(--text2);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .filter-btn.active { border-color: var(--gold); color: var(--gold); background: var(--gold-dim); }
+  .filter-btn:hover:not(.active) { border-color: rgba(255,255,255,0.15); color: var(--text); }
+  .filter-select {
+    padding: 7px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    background: var(--bg2);
+    color: var(--text2);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    outline: none;
+  }
+  .filter-select option { background: var(--bg2); }
 
-        .profile-logo {
-            width: 126px;
-            height: 126px;
-            border-radius: 50%;
-            display: block;
-            object-fit: cover;
-            background: #0d0d0d;
-            border: 3px solid #0d0d0d;
-        }
+  /* CHART */
+  .chart-wrap { position: relative; height: 220px; }
 
-        /* ── Título com fonte da logo ── */
-        .title {
-            font-family: 'Cinzel Decorative', serif;
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--gold);
-            letter-spacing: 2px;
-            text-shadow: 0 2px 12px rgba(212, 175, 55, 0.5), 0 0 40px rgba(212,175,55,0.15);
-            line-height: 1.25;
-        }
+  /* TABLE */
+  .data-table { width: 100%; border-collapse: collapse; }
+  .data-table th {
+    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--text3); padding: 10px 12px; text-align: left;
+    border-bottom: 1px solid var(--glass-border);
+  }
+  .data-table td {
+    font-size: 13px; padding: 12px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    color: var(--text2);
+  }
+  .data-table td:first-child { color: var(--text); }
+  .data-table tr:hover td { background: var(--glass); }
+  .chip {
+    display: inline-block; padding: 2px 10px;
+    border-radius: 12px; font-size: 11px; font-weight: 500;
+  }
+  .chip-green { background: rgba(76,175,130,0.15); color: var(--green); }
+  .chip-gold { background: var(--gold-dim); color: var(--gold); }
+  .chip-blue { background: rgba(82,134,224,0.15); color: var(--blue); }
+  .chip-red { background: rgba(224,82,82,0.15); color: var(--red); }
 
-        .subtitle {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 12px;
-            font-weight: 300;
-            color: #aaa;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            margin-top: 8px;
-        }
+  /* ══════════════════════════════════
+     SCHEDULING FLOW (CLIENT)
+  ══════════════════════════════════ */
+  #screen-client {
+    flex-direction: column;
+    background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 60%);
+  }
+  .client-header {
+    padding: 20px;
+    display: flex; align-items: center; gap: 12px;
+    border-bottom: 1px solid var(--glass-border);
+  }
+  .btn-back {
+    width: 36px; height: 36px;
+    background: var(--glass); border: 1px solid var(--glass-border);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 16px; color: var(--text2);
+    transition: all .2s;
+  }
+  .btn-back:hover { border-color: var(--gold); color: var(--gold); }
+  .step-title { font-size: 18px; font-weight: 600; }
+  .step-sub { font-size: 13px; color: var(--text3); }
+  .step-indicator {
+    display: flex; gap: 6px; margin-left: auto;
+  }
+  .step-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--text3); transition: all .3s;
+  }
+  .step-dot.active { background: var(--gold); width: 20px; border-radius: 3px; }
+  .step-dot.done { background: var(--green); }
 
-        /* ── Divisor dourado ── */
-        .divider {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin: 24px 0;
-            opacity: 0.6;
-        }
-        .divider::before, .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--gold));
-        }
-        .divider::after {
-            background: linear-gradient(90deg, var(--gold), transparent);
-        }
-        .divider i { color: var(--gold); font-size: 12px; }
+  .client-body { flex: 1; padding: 20px; overflow-y: auto; }
 
-        /* ── Links ── */
-        .links-container {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
+  /* SERVICES */
+  .service-cats {
+    display: flex; gap: 8px; margin-bottom: 20px;
+    overflow-x: auto; padding-bottom: 4px;
+  }
+  .cat-btn {
+    padding: 7px 16px; border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    background: var(--glass); color: var(--text2);
+    font-size: 12px; white-space: nowrap;
+    cursor: pointer; transition: all .2s;
+  }
+  .cat-btn.active { border-color: var(--gold); color: var(--gold); background: var(--gold-dim); }
+  .services-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+  }
+  @media(min-width:480px) { .services-grid { grid-template-columns: repeat(3, 1fr); } }
+  .service-card {
+    background: var(--glass); border: 1px solid var(--glass-border);
+    border-radius: var(--radius); padding: 16px; cursor: pointer;
+    transition: all .2s; position: relative;
+  }
+  .service-card:hover { border-color: rgba(255,255,255,0.15); }
+  .service-card.selected { border-color: var(--gold); background: var(--gold-dim); }
+  .service-icon { font-size: 24px; margin-bottom: 8px; }
+  .service-name { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .service-meta { font-size: 11px; color: var(--text3); }
+  .service-price { font-size: 16px; font-weight: 700; color: var(--gold); margin-top: 6px; }
+  .check-badge {
+    position: absolute; top: 10px; right: 10px;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--gold); display: none;
+    align-items: center; justify-content: center; font-size: 10px; color: #0a0a0b;
+  }
+  .service-card.selected .check-badge { display: flex; }
 
-        .link-item {
-            display: flex;
-            align-items: center;
-            background: var(--btn-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(192, 192, 192, 0.18);
-            padding: 17px 25px;
-            border-radius: 50px;
-            text-decoration: none;
-            color: var(--text-white);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            animation: fadeUp 0.7s ease both;
-        }
+  /* PROFESSIONALS */
+  .pros-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+  }
+  @media(min-width:480px) { .pros-grid { grid-template-columns: repeat(3, 1fr); } }
+  .pro-card {
+    background: var(--glass); border: 1px solid var(--glass-border);
+    border-radius: var(--radius); padding: 16px; cursor: pointer;
+    transition: all .2s; text-align: center;
+  }
+  .pro-card:hover { border-color: rgba(255,255,255,0.15); }
+  .pro-card.selected { border-color: var(--gold); background: var(--gold-dim); }
+  .pro-avatar {
+    width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 10px;
+    background: linear-gradient(135deg, var(--bg3), var(--bg2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; border: 2px solid var(--glass-border);
+  }
+  .pro-card.selected .pro-avatar { border-color: var(--gold); }
+  .pro-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+  .pro-role { font-size: 11px; color: var(--text3); }
+  .pro-stars { font-size: 11px; color: var(--gold); margin-top: 4px; }
 
-        .link-item:nth-child(1) { animation-delay: 0.15s; }
-        .link-item:nth-child(2) { animation-delay: 0.25s; }
-        .link-item:nth-child(3) { animation-delay: 0.35s; }
-        .link-item:nth-child(4) { animation-delay: 0.45s; }
+  /* CALENDAR */
+  .calendar-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .cal-nav {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--glass); border: 1px solid var(--glass-border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--text2); font-size: 14px;
+    transition: all .2s;
+  }
+  .cal-nav:hover { border-color: var(--gold); color: var(--gold); }
+  .cal-month { font-size: 16px; font-weight: 600; }
+  .cal-grid {
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
+    margin-bottom: 20px;
+  }
+  .cal-dow {
+    text-align: center; font-size: 10px; letter-spacing: 1px;
+    color: var(--text3); padding: 4px 0;
+  }
+  .cal-day {
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+    border-radius: 8px; font-size: 13px; cursor: pointer;
+    transition: all .2s; border: 1px solid transparent;
+  }
+  .cal-day:hover:not(.disabled):not(.empty) { background: var(--glass); border-color: var(--glass-border); }
+  .cal-day.selected { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); }
+  .cal-day.today { border-color: var(--glass-border); }
+  .cal-day.disabled { color: var(--text3); cursor: default; opacity: .4; }
+  .cal-day.empty { cursor: default; }
 
-        .link-item::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.06) 100%);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
+  .slots-title { font-size: 12px; color: var(--text2); margin-bottom: 12px; }
+  .slots-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+  }
+  @media(min-width:360px) { .slots-grid { grid-template-columns: repeat(5, 1fr); } }
+  .slot {
+    padding: 8px 4px; text-align: center;
+    background: var(--glass); border: 1px solid var(--glass-border);
+    border-radius: 8px; font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    cursor: pointer; transition: all .2s;
+  }
+  .slot:hover:not(.taken) { border-color: var(--gold); color: var(--gold); }
+  .slot.selected { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); font-weight: 500; }
+  .slot.taken {
+    background: rgba(0,0,0,0.3); color: var(--text3);
+    cursor: default; text-decoration: line-through;
+  }
 
-        .link-item:hover {
-            background: var(--btn-hover);
-            border-color: var(--gold);
-            transform: scale(1.025);
-            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
-        }
-        .link-item:hover::before { opacity: 1; }
+  /* CONFIRMATION */
+  .confirm-banner {
+    background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(201,168,76,0.05));
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: var(--radius); padding: 20px; margin-bottom: 20px;
+    text-align: center;
+  }
+  .confirm-tagline {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px; letter-spacing: 2px;
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .confirm-detail-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 0; border-bottom: 1px solid var(--glass-border);
+  }
+  .confirm-icon { font-size: 20px; width: 32px; text-align: center; }
+  .confirm-label { font-size: 11px; color: var(--text3); margin-bottom: 2px; }
+  .confirm-val { font-size: 14px; font-weight: 500; }
 
-        .link-item i {
-            font-size: 19px;
-            width: 28px;
-            color: var(--gold);
-            flex-shrink: 0;
-        }
+  /* EMPLOYEE AGENDA */
+  .agenda-date-strip {
+    display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 20px;
+  }
+  .aday {
+    flex-shrink: 0; width: 56px; height: 72px;
+    background: var(--glass); border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm); display: flex; flex-direction: column;
+    align-items: center; justify-content: center; cursor: pointer;
+    transition: all .2s;
+  }
+  .aday.active { border-color: var(--gold); background: var(--gold-dim); }
+  .aday-dow { font-size: 10px; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; }
+  .aday-num { font-family: 'Bebas Neue', sans-serif; font-size: 28px; line-height: 1; color: var(--text); }
+  .aday.active .aday-num { color: var(--gold); }
+  .aday-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); margin-top: 3px; }
 
-        .link-text {
-            flex: 1;
-            font-size: 14px;
-            font-weight: 600;
-            text-align: center;
-            letter-spacing: 1.5px;
-            margin-right: 28px;
-        }
+  .appt-list { display: flex; flex-direction: column; gap: 10px; }
+  .appt-card {
+    background: var(--glass); border: 1px solid var(--glass-border);
+    border-radius: var(--radius); padding: 14px 16px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .appt-time {
+    font-family: 'DM Mono', monospace; font-size: 15px;
+    color: var(--gold); min-width: 52px;
+  }
+  .appt-info { flex: 1; }
+  .appt-client { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .appt-service { font-size: 12px; color: var(--text3); }
+  .appt-status { }
 
-        /* Destaque botão agendamento */
-        .pulse {
-            border-color: var(--gold) !important;
-            box-shadow: 0 0 18px rgba(212, 175, 55, 0.25);
-        }
-        .pulse .link-text {
-            color: var(--gold-light);
-        }
+  /* CLIENTS LIST */
+  .clients-grid {
+    display: grid; gap: 10px;
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media(min-width:600px) { .clients-grid { grid-template-columns: repeat(3, 1fr); } }
+  .client-card {
+    background: var(--glass); border: 1px solid var(--glass-border);
+    border-radius: var(--radius); padding: 16px; cursor: pointer;
+    transition: all .2s;
+  }
+  .client-card:hover { border-color: rgba(255,255,255,0.15); }
+  .client-ini {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--gold-dim); border: 2px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue'; font-size: 18px; color: var(--gold);
+    margin-bottom: 10px;
+  }
+  .client-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .client-meta { font-size: 11px; color: var(--text3); }
 
-        /* ── Info ── */
-        .info-section {
-            margin-top: 36px;
-            padding: 18px 22px;
-            background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border-radius: 18px;
-            border: 1px solid rgba(212, 175, 55, 0.15);
-            animation: fadeUp 0.7s 0.55s ease both;
-        }
+  /* BOTTOM CTA */
+  .bottom-cta {
+    position: sticky; bottom: 0; padding: 16px 20px;
+    background: linear-gradient(to top, var(--bg) 60%, transparent);
+  }
 
-        .info-section p {
-            font-size: 12.5px;
-            color: #bbb;
-            line-height: 1.7;
-            margin-bottom: 6px;
-        }
-        .info-section p:last-child { margin-bottom: 0; }
-        .info-section i { color: var(--gold); margin-right: 8px; }
+  /* ANIMATIONS */
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ── Footer ── */
-        .footer {
-            margin-top: 40px;
-            font-size: 10px;
-            color: #444;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            animation: fadeUp 0.7s 0.65s ease both;
-        }
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 2px; }
 
-        /* ── WhatsApp float ── */
-        .whatsapp-float {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            background-color: #25d366;
-            color: white;
-            width: 58px;
-            height: 58px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 28px;
-            box-shadow: 0 4px 18px rgba(0,0,0,0.4);
-            z-index: 999;
-            transition: 0.3s;
-            text-decoration: none;
-        }
-        .whatsapp-float:hover { transform: scale(1.12); }
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(60px);
+    background: var(--bg3); border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm); padding: 12px 20px;
+    font-size: 13px; z-index: 9998; transition: transform .3s; white-space: nowrap;
+    backdrop-filter: blur(20px);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
 
-        /* ── Animações ── */
-        @keyframes fadeDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(18px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-    </style>
+  /* MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+    z-index: 1000; display: none; align-items: flex-end;
+    justify-content: center; padding: 20px;
+  }
+  .modal-overlay.open { display: flex; animation: fadeIn .2s; }
+  .modal {
+    width: 100%; max-width: 480px;
+    background: var(--bg2); border: 1px solid var(--glass-border);
+    border-radius: 24px; padding: 24px;
+    animation: fadeUp .3s ease;
+    max-height: 90vh; overflow-y: auto;
+  }
+  .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .modal-sub { font-size: 13px; color: var(--text3); margin-bottom: 20px; }
+  .modal-close { float: right; background: none; border: none; color: var(--text3); font-size: 20px; cursor: pointer; margin-top: -4px; }
+</style>
 </head>
 <body>
 
-    <div class="wrapper">
-        <div class="profile-container">
-            <div class="logo-ring">
-                <img
-                    src="data:image/jpeg;base64,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"
-                    alt="Logo El Pedro"
-                    class="profile-logo"
-                >
-            </div>
-            <h1 class="title">EL PEDRO<br>BARBEARIA</h1>
-            <p class="subtitle">Excelência em cada detalhe desde 2008</p>
-        </div>
-
-        <div class="divider"><i class="fa-solid fa-scissors"></i></div>
-
-        <div class="links-container">
-            
-            <a href="https://wa.me/5521998107874" class="link-item pulse" target="_blank">
-                <i class="fa-solid fa-calendar-check"></i>
-                <span class="link-text">AGENDAR HORÁRIO</span>
-            </a>
-
-            <a href="https://www.instagram.com/elpedrobarbearia" class="link-item" target="_blank">
-                <i class="fa-brands fa-instagram"></i>
-                <span class="link-text">NOSSO INSTAGRAM</span>
-            </a>
-
-            <a href="mailto:pedrodieggo27@gmail.com" class="link-item" target="_blank">
-                <i class="fa-solid fa-envelope"></i>
-                <span class="link-text">E-MAIL DE CONTATO</span>
-            </a>
-
-            <a href="https://www.google.com/maps/search/?api=1&query=Estr.+Velha+do+Rosário,+1061+-+Jardim+Primavera,+Duque+de+Caxias+-+RJ" class="link-item" target="_blank">
-                <i class="fa-solid fa-location-dot"></i>
-                <span class="link-text">COMO CHEGAR</span>
-            </a>
-
-        </div>
-
-        <div class="info-section">
-            <p><i class="fa-solid fa-clock"></i> Seg a Sáb: 09h às 20h</p>
-            <p><i class="fa-solid fa-map"></i> Estr. Velha do Rosário, 1061 - Jardim Primavera, Duque de Caxias - RJ</p>
-        </div>
-
-        <div class="footer">
-            EL PEDRO BARBEARIA © 2024
-        </div>
+<!-- ══════════════════════ LOGIN ══════════════════════ -->
+<div class="screen active" id="screen-login">
+  <div class="login-box">
+    <div class="brand">
+      <div class="brand-logo">EL PEDRO</div>
+      <div class="brand-sub">Barber Shop</div>
+    </div>
+    <div class="login-tabs">
+      <button class="login-tab active" onclick="switchLoginTab('staff')">Equipe</button>
+      <button class="login-tab" onclick="switchLoginTab('client')">Cliente</button>
     </div>
 
-    <a href="https://wa.me/5521998107874" class="whatsapp-float" target="_blank">
-        <i class="fa-brands fa-whatsapp"></i>
-    </a>
+    <!-- STAFF LOGIN -->
+    <div id="tab-staff">
+      <div class="field">
+        <label>E-MAIL</label>
+        <input type="email" id="login-email" placeholder="seu@email.com" value="admin@barberos.com">
+      </div>
+      <div class="field">
+        <label>SENHA</label>
+        <input type="password" id="login-pass" placeholder="••••••••" value="123456">
+      </div>
+      <div class="field">
+        <label>PERFIL</label>
+        <select id="login-role">
+          <option value="admin">Administrador</option>
+          <option value="employee">Funcionário</option>
+        </select>
+      </div>
+      <button class="btn-primary" onclick="doLogin()">ENTRAR</button>
+    </div>
 
+    <!-- CLIENT LOGIN -->
+    <div id="tab-client" style="display:none">
+      <button class="btn-ghost" onclick="goClientFlow()">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Continuar com Google
+      </button>
+      <div class="divider">ou cadastro rápido</div>
+      <div id="client-register-form">
+        <div class="field"><label>NOME COMPLETO</label><input type="text" id="reg-name" placeholder="Seu nome"></div>
+        <div class="field"><label>TELEFONE</label><input type="tel" id="reg-phone" placeholder="(21) 99999-0000"></div>
+        <div class="field"><label>DATA DE NASCIMENTO</label><input type="date" id="reg-dob"></div>
+        <button class="btn-primary" onclick="goClientFlow()">AGENDAR AGORA</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ ADMIN ══════════════════════ -->
+<div class="screen" id="screen-admin" style="flex-direction:column">
+  <div class="topbar">
+    <div class="topbar-logo">BarberOS</div>
+    <div class="topbar-nav">
+      <button class="nav-btn active" onclick="adminTab(this,'dashboard')">Dashboard</button>
+      <button class="nav-btn" onclick="adminTab(this,'agenda')">Agenda</button>
+      <button class="nav-btn" onclick="adminTab(this,'clientes')">Clientes</button>
+      <button class="nav-btn" onclick="adminTab(this,'services')">Serviços</button>
+    </div>
+    <div class="topbar-user">
+      <div class="topbar-name">Admin</div>
+      <div class="avatar">A</div>
+      <button class="btn-logout" onclick="logout()">Sair</button>
+    </div>
+  </div>
+  <div class="main-content">
+
+    <!-- DASHBOARD -->
+    <div class="tab-panel active" id="panel-dashboard">
+      <p class="section-title">Visão Geral · Financeiro</p>
+
+      <!-- FILTERS -->
+      <div class="filter-row">
+        <button class="filter-btn active" onclick="setFilter(this,'hoje')">Hoje</button>
+        <button class="filter-btn" onclick="setFilter(this,'semana')">Esta Semana</button>
+        <button class="filter-btn" onclick="setFilter(this,'semana-ant')">Sem. Anterior</button>
+        <button class="filter-btn" onclick="setFilter(this,'mes')">Este Mês</button>
+        <select class="filter-select" onchange="setFilterEmployee(this.value)" id="filter-emp">
+          <option value="all">Todos Funcionários</option>
+          <option value="marcos">Marcos</option>
+          <option value="rafael">Rafael</option>
+          <option value="lucas">Lucas</option>
+        </select>
+      </div>
+
+      <!-- BENTO METRICS -->
+      <div class="bento" style="margin-bottom:12px">
+        <div class="card">
+          <div class="metric-label">Faturamento</div>
+          <div class="metric-value gold" id="m-revenue">R$ 0</div>
+          <div class="metric-badge badge-up" id="m-rev-badge">▲ 0%</div>
+        </div>
+        <div class="card">
+          <div class="metric-label">Atendimentos</div>
+          <div class="metric-value" id="m-appts">0</div>
+          <div class="metric-sub" id="m-appts-sub">no período</div>
+        </div>
+        <div class="card">
+          <div class="metric-label">Ticket Médio</div>
+          <div class="metric-value green" id="m-ticket">R$ 0</div>
+          <div class="metric-sub">por cliente</div>
+        </div>
+        <div class="card">
+          <div class="metric-label">Serviço Top</div>
+          <div class="metric-value" id="m-topservice" style="font-size:18px;padding-top:4px">—</div>
+          <div class="metric-sub" id="m-topservice-val">—</div>
+        </div>
+      </div>
+
+      <!-- CHART -->
+      <div class="card card-span4" style="margin-bottom:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <div class="metric-label" style="margin-bottom:0">Evolução de Faturamento</div>
+          <div style="display:flex;gap:8px">
+            <button class="filter-btn active" onclick="setChartType(this,'bar')">Barras</button>
+            <button class="filter-btn" onclick="setChartType(this,'line')">Linha</button>
+          </div>
+        </div>
+        <div class="chart-wrap"><canvas id="revenueChart"></canvas></div>
+      </div>
+
+      <!-- EMPLOYEE PERFORMANCE + TOP SERVICES -->
+      <div class="bento">
+        <div class="card card-span2">
+          <div class="metric-label" style="margin-bottom:12px">Performance por Funcionário</div>
+          <table class="data-table">
+            <thead><tr>
+              <th>Funcionário</th><th>Atend.</th><th>Faturamento</th><th>Status</th>
+            </tr></thead>
+            <tbody id="emp-table"></tbody>
+          </table>
+        </div>
+        <div class="card card-span2">
+          <div class="metric-label" style="margin-bottom:12px">Serviços Mais Rentáveis</div>
+          <table class="data-table">
+            <thead><tr>
+              <th>Serviço</th><th>Qtd</th><th>Total</th>
+            </tr></thead>
+            <tbody id="services-table"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- AGENDA PANEL -->
+    <div class="tab-panel" id="panel-agenda">
+      <p class="section-title">Agenda do Dia</p>
+      <div class="agenda-date-strip" id="admin-date-strip"></div>
+      <div class="appt-list" id="admin-appt-list"></div>
+    </div>
+
+    <!-- CLIENTES PANEL -->
+    <div class="tab-panel" id="panel-clientes">
+      <p class="section-title">Base de Clientes</p>
+      <div style="margin-bottom:16px">
+        <input type="text" placeholder="🔍  Buscar cliente..." oninput="filterClients(this.value)"
+          style="width:100%;padding:12px 16px;background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius-sm);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none">
+      </div>
+      <div class="clients-grid" id="clients-grid"></div>
+    </div>
+
+    <!-- SERVICES PANEL -->
+    <div class="tab-panel" id="panel-services">
+      <p class="section-title">Gestão de Serviços</p>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+        <button class="btn-primary" style="width:auto;padding:10px 20px" onclick="openAddService()">+ Novo Serviço</button>
+      </div>
+      <div id="services-mgmt-list" class="appt-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ EMPLOYEE ══════════════════════ -->
+<div class="screen" id="screen-employee" style="flex-direction:column">
+  <div class="topbar">
+    <div class="topbar-logo">BarberOS</div>
+    <div class="topbar-user">
+      <div class="topbar-name" id="emp-name-display">Funcionário</div>
+      <div class="avatar" id="emp-avatar">M</div>
+      <button class="btn-logout" onclick="logout()">Sair</button>
+    </div>
+  </div>
+  <div class="main-content">
+    <p class="section-title">Minha Agenda</p>
+    <div class="agenda-date-strip" id="emp-date-strip"></div>
+    <div class="appt-list" id="emp-appt-list"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════ CLIENT FLOW ══════════════════════ -->
+<div class="screen" id="screen-client" style="flex-direction:column">
+  <div class="client-header">
+    <button class="btn-back" onclick="clientBack()">←</button>
+    <div>
+      <div class="step-title" id="step-title">Escolha um Serviço</div>
+      <div class="step-sub" id="step-sub">Selecione o que deseja fazer</div>
+    </div>
+    <div class="step-indicator">
+      <div class="step-dot active" id="sd0"></div>
+      <div class="step-dot" id="sd1"></div>
+      <div class="step-dot" id="sd2"></div>
+      <div class="step-dot" id="sd3"></div>
+    </div>
+  </div>
+  <div class="client-body">
+
+    <!-- STEP 0: SERVICES -->
+    <div id="cstep-0">
+      <div class="service-cats">
+        <button class="cat-btn active" onclick="setCat(this,'all')">Todos</button>
+        <button class="cat-btn" onclick="setCat(this,'popular')">Populares</button>
+        <button class="cat-btn" onclick="setCat(this,'barba')">Barba</button>
+        <button class="cat-btn" onclick="setCat(this,'outros')">Outros</button>
+      </div>
+      <div class="services-grid" id="services-grid"></div>
+    </div>
+
+    <!-- STEP 1: PROFESSIONAL -->
+    <div id="cstep-1" style="display:none">
+      <div class="pros-grid" id="pros-grid"></div>
+    </div>
+
+    <!-- STEP 2: DATE/TIME -->
+    <div id="cstep-2" style="display:none">
+      <div class="card" style="margin-bottom:16px">
+        <div class="calendar-header">
+          <button class="cal-nav" onclick="calNav(-1)">‹</button>
+          <div class="cal-month" id="cal-month-label">Maio 2026</div>
+          <button class="cal-nav" onclick="calNav(1)">›</button>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+      </div>
+      <div class="slots-title" id="slots-title">Selecione um horário</div>
+      <div class="slots-grid" id="slots-grid"></div>
+    </div>
+
+    <!-- STEP 3: CONFIRM -->
+    <div id="cstep-3" style="display:none">
+      <div class="confirm-banner">
+        <div style="font-size:32px;margin-bottom:8px">✂️</div>
+        <div class="confirm-tagline">GARANTA SUA VAGA AGORA</div>
+        <div style="font-size:13px;color:var(--gold);opacity:.8;margin-top:4px;letter-spacing:1px">Confirme seu agendamento agora e pague quando o serviço estiver concluído</div>
+      </div>
+      <div class="card">
+        <div class="confirm-detail-row"><span class="confirm-icon">✂️</span><div><div class="confirm-label">SERVIÇO</div><div class="confirm-val" id="conf-service">—</div></div></div>
+        <div class="confirm-detail-row"><span class="confirm-icon">👤</span><div><div class="confirm-label">PROFISSIONAL</div><div class="confirm-val" id="conf-pro">—</div></div></div>
+        <div class="confirm-detail-row"><span class="confirm-icon">📅</span><div><div class="confirm-label">DATA & HORA</div><div class="confirm-val" id="conf-datetime">—</div></div></div>
+        <div class="confirm-detail-row" style="border-bottom:none"><span class="confirm-icon">💰</span><div><div class="confirm-label">VALOR</div><div class="confirm-val" id="conf-price" style="color:var(--gold);font-size:18px;font-weight:700">—</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA BUTTON -->
+  <div class="bottom-cta">
+    <button class="btn-primary" id="client-next-btn" onclick="clientNext()">CONTINUAR →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════ MODALS ══════════════════════ -->
+<div class="modal-overlay" id="modal-service" onclick="closeModal('modal-service')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <div class="modal-title" id="modal-service-title">Novo Serviço</div>
+      <button class="modal-close" onclick="closeModal('modal-service')">×</button>
+    </div>
+    <div class="modal-sub">Configure os detalhes do serviço</div>
+    <div class="field"><label>NOME DO SERVIÇO</label><input type="text" id="svc-name" placeholder="Ex: Corte + Barba"></div>
+    <div class="field"><label>CATEGORIA</label>
+      <select id="svc-cat">
+        <option value="popular">Popular</option>
+        <option value="barba">Barba</option>
+        <option value="outros">Outros</option>
+      </select>
+    </div>
+    <div class="field"><label>PREÇO (R$)</label><input type="number" id="svc-price" placeholder="45.00"></div>
+    <div class="field"><label>DURAÇÃO (min)</label><input type="number" id="svc-duration" value="20"></div>
+    <button class="btn-primary" onclick="saveService()">SALVAR SERVIÇO</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════════════ SCRIPTS ══════════════════════ -->
+<script>
+// ════════════════════════════════════════
+// DATA STORE
+// ════════════════════════════════════════
+const SERVICES = [
+  { id:1, name:'Corte Simples', cat:'popular', price:35, duration:20, icon:'✂️' },
+  { id:2, name:'Corte + Barba', cat:'popular', price:55, duration:40, icon:'✂️🧔' },
+  { id:3, name:'Degradê', cat:'popular', price:45, duration:20, icon:'💈' },
+  { id:4, name:'Barba Completa', cat:'barba', price:30, duration:20, icon:'🧔' },
+  { id:5, name:'Barba Design', cat:'barba', price:40, duration:20, icon:'✏️' },
+  { id:6, name:'Hidratação', cat:'outros', price:25, duration:20, icon:'💧' },
+  { id:7, name:'Progressiva', cat:'outros', price:70, duration:60, icon:'🌟' },
+  { id:8, name:'Coloração', cat:'outros', price:80, duration:40, icon:'🎨' },
+];
+
+const PROFESSIONALS = [
+  { id:1, name:'Marcos Silva', role:'Barbeiro Sênior', emoji:'👨‍🦱', rating:'★★★★★', emp:'marcos' },
+  { id:2, name:'Rafael Costa', role:'Barbeiro Especialista', emoji:'👨‍🦰', rating:'★★★★☆', emp:'rafael' },
+  { id:3, name:'Lucas Mendes', role:'Barbeiro', emoji:'👨', rating:'★★★★☆', emp:'lucas' },
+];
+
+const CLIENTS = [
+  { name:'João Pedro', phone:'(21) 99900-0001', visits:12 },
+  { name:'Carlos Eduardo', phone:'(21) 99900-0002', visits:8 },
+  { name:'André Luiz', phone:'(21) 99900-0003', visits:5 },
+  { name:'Bruno Martins', phone:'(21) 99900-0004', visits:15 },
+  { name:'Felipe Souza', phone:'(21) 99900-0005', visits:3 },
+  { name:'Diego Rocha', phone:'(21) 99900-0006', visits:9 },
+];
+
+const TAKEN_SLOTS = ['09:00','09:40','10:20','11:00','13:00','14:20','15:00','16:40'];
+
+// Financial mock data
+const FIN_DATA = {
+  hoje:    { revenue:420, appts:9, emp:{ marcos:180, rafael:140, lucas:100 }, services:{ 'Corte + Barba':4, 'Degradê':3, 'Barba Completa':2 }, chart:{ labels:['09h','10h','11h','12h','13h','14h','15h','16h'], data:[60,80,55,0,90,70,65,0] } },
+  semana:  { revenue:2840, appts:61, emp:{ marcos:1100, rafael:980, lucas:760 }, services:{ 'Corte + Barba':22, 'Degradê':18, 'Corte Simples':12 }, chart:{ labels:['Seg','Ter','Qua','Qui','Sex','Sáb'], data:[380,450,510,390,620,490] } },
+  'semana-ant': { revenue:2610, appts:54, emp:{ marcos:1010, rafael:890, lucas:710 }, services:{ 'Corte + Barba':20, 'Degradê':15, 'Barba Completa':10 }, chart:{ labels:['Seg','Ter','Qua','Qui','Sex','Sáb'], data:[420,330,510,290,570,490] } },
+  mes:     { revenue:11200, appts:240, emp:{ marcos:4500, rafael:3800, lucas:2900 }, services:{ 'Corte + Barba':88, 'Degradê':72, 'Corte Simples':45 }, chart:{ labels:['S1','S2','S3','S4'], data:[2600,2900,3100,2600] } },
+};
+
+const APPTS = [
+  { time:'09:00', client:'João Pedro', service:'Corte + Barba', emp:'marcos', status:'done' },
+  { time:'09:40', client:'Carlos Eduardo', service:'Degradê', emp:'rafael', status:'done' },
+  { time:'10:20', client:'André Luiz', service:'Barba Completa', emp:'marcos', status:'done' },
+  { time:'11:00', client:'Bruno Martins', service:'Corte Simples', emp:'lucas', status:'upcoming' },
+  { time:'14:00', client:'Felipe Souza', service:'Corte + Barba', emp:'marcos', status:'upcoming' },
+  { time:'15:20', client:'Diego Rocha', service:'Degradê', emp:'rafael', status:'upcoming' },
+];
+
+// ════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════
+let currentFilter = 'hoje';
+let currentEmpFilter = 'all';
+let chartType = 'bar';
+let revenueChart = null;
+let clientStep = 0;
+let selectedService = null, selectedPro = null, selectedDate = null, selectedSlot = null;
+let currentCat = 'all';
+let calYear = 2026, calMonth = 4; // 0-indexed: 4 = May
+
+// ════════════════════════════════════════
+// LOGIN
+// ════════════════════════════════════════
+function switchLoginTab(tab) {
+  document.querySelectorAll('.login-tab').forEach((b,i)=>b.classList.toggle('active', (tab==='staff'?i===0:i===1)));
+  document.getElementById('tab-staff').style.display = tab==='staff'?'block':'none';
+  document.getElementById('tab-client').style.display = tab==='client'?'block':'none';
+}
+
+function doLogin() {
+  const role = document.getElementById('login-role').value;
+  showScreen(role==='admin'?'admin':'employee');
+  if(role==='employee') {
+    document.getElementById('emp-name-display').textContent='Marcos Silva';
+    document.getElementById('emp-avatar').textContent='M';
+    renderEmployeeScreen();
+  } else {
+    renderAdminScreen();
+  }
+}
+
+function goClientFlow() {
+  clientStep = 0;
+  showScreen('client');
+  renderClientStep();
+}
+
+function logout() { showScreen('login'); }
+
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active');
+}
+
+// ════════════════════════════════════════
+// ADMIN
+// ════════════════════════════════════════
+function adminTab(btn, panel) {
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+panel).classList.add('active');
+  if(panel==='dashboard') renderDashboard();
+  if(panel==='agenda') renderAdminAgenda();
+  if(panel==='clientes') renderClients();
+  if(panel==='services') renderServicesMgmt();
+}
+
+function renderAdminScreen() {
+  renderDashboard();
+  renderAdminAgenda();
+  renderClients();
+  renderServicesMgmt();
+}
+
+function setFilter(btn, filter) {
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  currentFilter = filter;
+  renderDashboard();
+}
+
+function setFilterEmployee(val) {
+  currentEmpFilter = val;
+  renderDashboard();
+}
+
+function setChartType(btn, type) {
+  btn.closest('.card').querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  chartType = type;
+  renderChart();
+}
+
+function renderDashboard() {
+  const raw = FIN_DATA[currentFilter];
+  let revenue = raw.revenue, appts = raw.appts;
+  // employee filter
+  if(currentEmpFilter !== 'all') {
+    revenue = raw.emp[currentEmpFilter] || 0;
+    appts = Math.round(appts * (revenue / raw.revenue));
+  }
+  const ticket = appts ? Math.round(revenue/appts) : 0;
+  const topSvc = Object.entries(raw.services).sort((a,b)=>b[1]-a[1])[0];
+  const topSvcRevenue = topSvc ? topSvc[1] * (SERVICES.find(s=>s.name===topSvc[0])?.price||35) : 0;
+
+  document.getElementById('m-revenue').textContent = 'R$ '+revenue.toLocaleString('pt-BR');
+  document.getElementById('m-appts').textContent = appts;
+  document.getElementById('m-appts-sub').textContent = 'no período';
+  document.getElementById('m-ticket').textContent = 'R$ '+ticket;
+  document.getElementById('m-topservice').textContent = topSvc?topSvc[0]:'—';
+  document.getElementById('m-topservice-val').textContent = topSvc?'R$ '+topSvcRevenue.toLocaleString('pt-BR'):'—';
+
+  const prevRevenue = revenue * 0.92;
+  const change = Math.round(((revenue-prevRevenue)/prevRevenue)*100);
+  const badge = document.getElementById('m-rev-badge');
+  badge.textContent = (change>=0?'▲ ':'▼ ')+Math.abs(change)+'%';
+  badge.className = 'metric-badge '+(change>=0?'badge-up':'badge-down');
+
+  // Employee table
+  const empTable = document.getElementById('emp-table');
+  empTable.innerHTML = '';
+  const employees = [{name:'Marcos Silva',key:'marcos'},{name:'Rafael Costa',key:'rafael'},{name:'Lucas Mendes',key:'lucas'}];
+  employees.forEach(e=>{
+    const eRev = raw.emp[e.key]||0;
+    const eAppts = Math.round(raw.appts * (eRev/raw.revenue));
+    const pct = Math.round((eRev/raw.revenue)*100);
+    empTable.innerHTML += `<tr><td>${e.name}</td><td>${eAppts}</td><td>R$ ${eRev.toLocaleString('pt-BR')}</td><td><span class="chip chip-gold">${pct}%</span></td></tr>`;
+  });
+
+  // Services table
+  const svcTable = document.getElementById('services-table');
+  svcTable.innerHTML = '';
+  Object.entries(raw.services).sort((a,b)=>b[1]-a[1]).forEach(([name,qty],i)=>{
+    const svc = SERVICES.find(s=>s.name===name);
+    const total = qty*(svc?.price||35);
+    const chips = ['chip-gold','chip-green','chip-blue'];
+    svcTable.innerHTML += `<tr><td>${name}</td><td>${qty}</td><td><span class="chip ${chips[i%3]}">R$ ${total}</span></td></tr>`;
+  });
+
+  renderChart();
+}
+
+function renderChart() {
+  const raw = FIN_DATA[currentFilter];
+  let data = raw.chart.data, labels = raw.chart.labels;
+  if(currentEmpFilter!=='all') {
+    const ratio = (raw.emp[currentEmpFilter]||0)/raw.revenue;
+    data = data.map(v=>Math.round(v*ratio));
+  }
+  if(revenueChart) revenueChart.destroy();
+  const ctx = document.getElementById('revenueChart').getContext('2d');
+  const gold = '#c9a84c', goldA = 'rgba(201,168,76,0.15)', goldLine = 'rgba(201,168,76,0.8)';
+  revenueChart = new Chart(ctx, {
+    type: chartType,
+    data: {
+      labels,
+      datasets:[{
+        label:'Faturamento (R$)',
+        data,
+        backgroundColor: chartType==='bar'?goldA:undefined,
+        borderColor: gold,
+        borderWidth: 2,
+        borderRadius: chartType==='bar'?8:0,
+        fill: chartType==='line',
+        tension: .4,
+        pointBackgroundColor: gold,
+        pointRadius: 4,
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, tooltip:{ backgroundColor:'#18181d', borderColor:'rgba(255,255,255,0.08)', borderWidth:1, titleColor:'#a09a8e', bodyColor:'#f0ece4', callbacks:{ label: c=>'R$ '+c.parsed.y } } },
+      scales:{
+        x:{ grid:{color:'rgba(255,255,255,0.04)'}, ticks:{color:'#5a5650',font:{family:'DM Mono',size:11}} },
+        y:{ grid:{color:'rgba(255,255,255,0.04)'}, ticks:{color:'#5a5650',font:{family:'DM Mono',size:11},callback:v=>'R$ '+v} }
+      }
+    }
+  });
+}
+
+// AGENDA
+function renderDateStrip(containerId) {
+  const c = document.getElementById(containerId);
+  c.innerHTML = '';
+  const today = new Date();
+  const days = ['DOM','SEG','TER','QUA','QUI','SEX','SÁB'];
+  for(let i=-1;i<=5;i++) {
+    const d = new Date(today); d.setDate(d.getDate()+i);
+    const active = i===0;
+    c.innerHTML += `<div class="aday ${active?'active':''}" onclick="selectAgendaDay(this)">
+      <span class="aday-dow">${days[d.getDay()]}</span>
+      <span class="aday-num">${d.getDate()}</span>
+      ${active?'<span class="aday-dot"></span>':''}
+    </div>`;
+  }
+}
+
+function renderAdminAgenda() {
+  renderDateStrip('admin-date-strip');
+  renderApptList('admin-appt-list', null);
+}
+
+function renderEmployeeScreen() {
+  renderDateStrip('emp-date-strip');
+  renderApptList('emp-appt-list', 'marcos');
+}
+
+function selectAgendaDay(el) {
+  el.parentElement.querySelectorAll('.aday').forEach(d=>d.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function renderApptList(containerId, empFilter) {
+  const c = document.getElementById(containerId);
+  c.innerHTML = '';
+  const appts = empFilter ? APPTS.filter(a=>a.emp===empFilter) : APPTS;
+  if(!appts.length) { c.innerHTML = '<div style="text-align:center;color:var(--text3);padding:40px">Nenhum agendamento</div>'; return; }
+  appts.forEach(a=>{
+    const statusChip = a.status==='done'
+      ? '<span class="chip chip-green">✓ Concluído</span>'
+      : '<span class="chip chip-gold">⏳ Aguardando</span>';
+    c.innerHTML += `<div class="appt-card">
+      <div class="appt-time">${a.time}</div>
+      <div class="appt-info">
+        <div class="appt-client">${a.client}</div>
+        <div class="appt-service">${a.service}</div>
+      </div>
+      <div class="appt-status">${statusChip}</div>
+    </div>`;
+  });
+}
+
+// CLIENTS
+function renderClients(q='') {
+  const g = document.getElementById('clients-grid');
+  g.innerHTML = '';
+  const filtered = q ? CLIENTS.filter(c=>c.name.toLowerCase().includes(q.toLowerCase())) : CLIENTS;
+  filtered.forEach(c=>{
+    const ini = c.name.split(' ').map(w=>w[0]).join('').slice(0,2);
+    g.innerHTML += `<div class="client-card">
+      <div class="client-ini">${ini}</div>
+      <div class="client-name">${c.name}</div>
+      <div class="client-meta">${c.phone}</div>
+      <div class="client-meta" style="margin-top:6px"><span class="chip chip-blue">${c.visits} visitas</span></div>
+    </div>`;
+  });
+}
+
+function filterClients(q) { renderClients(q); }
+
+// SERVICES MGMT
+function renderServicesMgmt() {
+  const c = document.getElementById('services-mgmt-list');
+  c.innerHTML = '';
+  SERVICES.forEach(s=>{
+    c.innerHTML += `<div class="appt-card" style="justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:14px">
+        <div style="font-size:24px">${s.icon}</div>
+        <div>
+          <div class="appt-client">${s.name}</div>
+          <div class="appt-service">${s.duration} min · <span class="chip chip-gold">R$ ${s.price}</span></div>
+        </div>
+      </div>
+      <button onclick="editService(${s.id})" style="background:var(--glass);border:1px solid var(--glass-border);border-radius:8px;padding:6px 12px;color:var(--text2);cursor:pointer;font-size:12px">Editar</button>
+    </div>`;
+  });
+}
+
+function openAddService() {
+  document.getElementById('modal-service-title').textContent='Novo Serviço';
+  document.getElementById('svc-name').value='';
+  document.getElementById('svc-price').value='';
+  document.getElementById('svc-duration').value='20';
+  openModal('modal-service');
+}
+
+function editService(id) {
+  const s = SERVICES.find(x=>x.id===id);
+  if(!s) return;
+  document.getElementById('modal-service-title').textContent='Editar Serviço';
+  document.getElementById('svc-name').value=s.name;
+  document.getElementById('svc-price').value=s.price;
+  document.getElementById('svc-duration').value=s.duration;
+  document.getElementById('svc-cat').value=s.cat;
+  openModal('modal-service');
+}
+
+function saveService() {
+  showToast('✅ Serviço salvo com sucesso');
+  closeModal('modal-service');
+  renderServicesMgmt();
+}
+
+// ════════════════════════════════════════
+// CLIENT FLOW
+// ════════════════════════════════════════
+const STEP_INFO = [
+  { title:'Escolha um Serviço', sub:'Selecione o que deseja fazer' },
+  { title:'Escolha o Profissional', sub:'Com quem quer ser atendido?' },
+  { title:'Data e Horário', sub:'Escolha quando prefere' },
+  { title:'Confirmar Agendamento', sub:'Revise os detalhes' },
+];
+
+function renderClientStep() {
+  for(let i=0;i<4;i++) {
+    document.getElementById('cstep-'+i).style.display = i===clientStep?'block':'none';
+    const dot = document.getElementById('sd'+i);
+    dot.classList.toggle('active', i===clientStep);
+    dot.classList.toggle('done', i<clientStep);
+  }
+  document.getElementById('step-title').textContent = STEP_INFO[clientStep].title;
+  document.getElementById('step-sub').textContent = STEP_INFO[clientStep].sub;
+  const btn = document.getElementById('client-next-btn');
+  if(clientStep===0) btn.textContent='CONTINUAR →';
+  else if(clientStep===1) btn.textContent='ESCOLHER HORÁRIO →';
+  else if(clientStep===2) btn.textContent='CONFIRMAR →';
+  else btn.textContent='CONFIRMAR AGENDAMENTO ✓';
+
+  if(clientStep===0) renderServices();
+  if(clientStep===1) renderPros();
+  if(clientStep===2) renderCalendar();
+  if(clientStep===3) renderConfirm();
+}
+
+function clientNext() {
+  if(clientStep===0 && !selectedService) { showToast('⚠️ Selecione um serviço'); return; }
+  if(clientStep===1 && !selectedPro) { showToast('⚠️ Selecione um profissional'); return; }
+  if(clientStep===2 && (!selectedDate||!selectedSlot)) { showToast('⚠️ Selecione data e horário'); return; }
+  if(clientStep===3) { bookConfirm(); return; }
+  clientStep++;
+  renderClientStep();
+}
+
+function clientBack() {
+  if(clientStep===0) { showScreen('login'); return; }
+  clientStep--;
+  renderClientStep();
+}
+
+// SERVICES
+function renderServices() {
+  const g = document.getElementById('services-grid');
+  g.innerHTML = '';
+  const filtered = currentCat==='all' ? SERVICES : SERVICES.filter(s=>s.cat===currentCat);
+  filtered.forEach(s=>{
+    g.innerHTML += `<div class="service-card ${selectedService?.id===s.id?'selected':''}" onclick="selectService(${s.id})">
+      <div class="check-badge">✓</div>
+      <div class="service-icon">${s.icon}</div>
+      <div class="service-name">${s.name}</div>
+      <div class="service-meta">⏱ ${s.duration} min</div>
+      <div class="service-price">R$ ${s.price}</div>
+    </div>`;
+  });
+}
+
+function selectService(id) {
+  selectedService = SERVICES.find(s=>s.id===id);
+  renderServices();
+}
+
+function setCat(btn, cat) {
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  currentCat = cat;
+  renderServices();
+}
+
+// PROS
+function renderPros() {
+  const g = document.getElementById('pros-grid');
+  g.innerHTML = '';
+  PROFESSIONALS.forEach(p=>{
+    g.innerHTML += `<div class="pro-card ${selectedPro?.id===p.id?'selected':''}" onclick="selectPro(${p.id})">
+      <div class="pro-avatar">${p.emoji}</div>
+      <div class="pro-name">${p.name}</div>
+      <div class="pro-role">${p.role}</div>
+      <div class="pro-stars">${p.rating}</div>
+    </div>`;
+  });
+}
+
+function selectPro(id) {
+  selectedPro = PROFESSIONALS.find(p=>p.id===id);
+  renderPros();
+}
+
+// CALENDAR
+function renderCalendar() {
+  const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  document.getElementById('cal-month-label').textContent = `${months[calMonth]} ${calYear}`;
+  const g = document.getElementById('cal-grid');
+  g.innerHTML = '';
+  const days = ['D','S','T','Q','Q','S','S'];
+  days.forEach(d=>{ g.innerHTML+=`<div class="cal-dow">${d}</div>`; });
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+  const today = new Date();
+  for(let i=0;i<firstDay;i++) g.innerHTML+=`<div class="cal-day empty"></div>`;
+  for(let d=1;d<=daysInMonth;d++) {
+    const date = new Date(calYear,calMonth,d);
+    const isPast = date < new Date(today.getFullYear(),today.getMonth(),today.getDate());
+    const isToday = date.toDateString()===today.toDateString();
+    const selStr = selectedDate?.toDateString();
+    const thisStr = date.toDateString();
+    g.innerHTML+=`<div class="cal-day ${isPast?'disabled':''} ${isToday?'today':''} ${selStr===thisStr?'selected':''}" onclick="${isPast?'':'calSelect('+calYear+','+calMonth+','+d+')'}">${d}</div>`;
+  }
+  renderSlots();
+}
+
+function calNav(dir) { calMonth+=dir; if(calMonth>11){calMonth=0;calYear++;}if(calMonth<0){calMonth=11;calYear--;} renderCalendar(); }
+
+function calSelect(y,m,d) {
+  selectedDate = new Date(y,m,d);
+  selectedSlot = null;
+  renderCalendar();
+}
+
+function renderSlots() {
+  const g = document.getElementById('slots-grid');
+  const title = document.getElementById('slots-title');
+  if(!selectedDate) { g.innerHTML=''; title.textContent='Selecione uma data primeiro'; return; }
+  const months=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  title.textContent=`Horários — ${selectedDate.getDate()} ${months[selectedDate.getMonth()]}`;
+  g.innerHTML='';
+  const slots=[];
+  for(let h=9;h<20;h++) for(let m=0;m<60;m+=20) slots.push(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`);
+  slots.forEach(s=>{
+    const taken = TAKEN_SLOTS.includes(s);
+    g.innerHTML+=`<div class="slot ${taken?'taken':''} ${selectedSlot===s&&!taken?'selected':''}" onclick="${taken?'':'selectSlot(\''+s+'\')'}">
+      ${s}${taken?'<br><span style="font-size:9px">ocupado</span>':''}
+    </div>`;
+  });
+}
+
+function selectSlot(slot) { selectedSlot=slot; renderSlots(); }
+
+// CONFIRM
+function renderConfirm() {
+  const months=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  document.getElementById('conf-service').textContent = selectedService?.name||'—';
+  document.getElementById('conf-pro').textContent = selectedPro?.name||'—';
+  document.getElementById('conf-datetime').textContent = selectedDate?`${selectedDate.getDate()} ${months[selectedDate.getMonth()]} ${selectedDate.getFullYear()} às ${selectedSlot}`:'—';
+  document.getElementById('conf-price').textContent = selectedService?`R$ ${selectedService.price}`:'—';
+}
+
+function bookConfirm() {
+  TAKEN_SLOTS.push(selectedSlot);
+  APPTS.push({ time:selectedSlot, client:'Você', service:selectedService.name, emp:selectedPro.emp, status:'upcoming' });
+  showToast('🎉 Agendamento confirmado! Até logo.');
+  setTimeout(()=>{ selectedService=null; selectedPro=null; selectedDate=null; selectedSlot=null; showScreen('login'); },1800);
+}
+
+// ════════════════════════════════════════
+// UTILS
+// ════════════════════════════════════════
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
+
+// ════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', ()=>{
+  // nothing to preload
+});
+</script>
 </body>
 </html>
